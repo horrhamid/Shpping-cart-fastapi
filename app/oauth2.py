@@ -37,10 +37,8 @@ class UserNotFound(Exception):
 
 def require_user(db: Session = Depends(get_db), Authorize: AuthJWT = Depends()):
     try:
-        print(Authorize.jwt_required())
         Authorize.jwt_required()
         user_id = Authorize.get_jwt_subject()
-        print(user_id)
         user = db.query(models.User).filter(models.User.id == user_id).first()
         if not user:
             raise UserNotFound('User no longer exist')

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-import uuid
+
+from typing import List
 from datetime import datetime
 
 
@@ -19,29 +20,26 @@ class LoginUserSchema(BaseModel):
     password: str
 
 class FilteredUserResponse(UserSchema):
-    id: uuid.UUID
+    id: int
 
 
 class Cart(BaseModel):
-    id : uuid.UUID
+    id : int
     date : datetime
     desc : str
-    user_id: uuid.UUID | None = None
+    user_id: int | None = None
     user : FilteredUserResponse
 
     class Config:
         orm_mode = True
 
-class Products(BaseModel):
-    id : uuid.UUID
-
-
-    product_code : int
-
+class Product(BaseModel):
+    id : int
     title : str
-
     price : float
     description : str
     category : str
 
     
+class ListProduct(BaseModel):
+    posts: List[Product]

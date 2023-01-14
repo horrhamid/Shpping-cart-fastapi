@@ -71,18 +71,12 @@ def login(payload: schema.LoginUserSchema, response: Response, db: Session = Dep
     return {'status': 'success', 'access_token': access_token}
 
 
-# [... Configurations ...]
-
-# Register a new user
-
-# Login user
 
 # Refresh access token
 @router.get('/refresh')
 def refresh_token(response: Response, request: Request, Authorize: AuthJWT = Depends(), db: Session = Depends(get_db)):
     try:
         Authorize.jwt_refresh_token_required()
-
         user_id = Authorize.get_jwt_subject()
         if not user_id:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,

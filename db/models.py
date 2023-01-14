@@ -24,18 +24,25 @@ class Cart(Base):
         'user.id'), nullable=False)
     user = relationship('User')
 
-class Products(Base):
+class Product(Base):
     __tablename__= 'product'
     id = Column(Integer, primary_key=True, nullable=False)
-    product_code = Column(Integer)
     title = Column(String)
     price = Column(Numeric)
     description = Column(String)
     category = Column(String)
 
-    cart_id = Column(Integer, ForeignKey(
-        'cart.id', ondelete='CASCADE'), nullable=False)
+
+class Products(Base):
+    __tablename__= 'products'
+    id = Column(Integer, primary_key=True, nullable=False)
+    product_code = Column(Integer, ForeignKey('product.id', ondelete='CASCADE'), nullable=False)
+    description = Column(String)
+    cart_id = Column(Integer, ForeignKey('cart.id', ondelete='CASCADE'), nullable=False)
     cart = relationship('Cart')
+    product = relationship('Product')
+
+
     
 
 

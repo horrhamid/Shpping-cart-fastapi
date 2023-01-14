@@ -2,7 +2,7 @@ import uvicorn
 import fastapi
 from fastapi_sqlalchemy import DBSessionMiddleware, db
 
-from api import auth
+from api import auth, api
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from fastapi import FastAPI, HTTPException, Depends, Request
@@ -43,6 +43,7 @@ def configure():
 
 def configure_routing():
     app.include_router(auth.router, tags=['Auth'], prefix='/auth')
+    app.include_router(api.router, tags=['Api'], prefix='/api')
     # api.include_router(weather_api.router)
     pass
 
