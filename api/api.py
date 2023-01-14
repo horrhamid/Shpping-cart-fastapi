@@ -10,7 +10,7 @@ from app.oauth2 import require_user
 router = APIRouter()
 
 
-@router.get('/products')
+@router.get('/product')
 def get_posts(db: Session = Depends(get_db), user_id: str = Depends(require_user)):
 
     products = db.query(models.Product).all()
@@ -18,7 +18,7 @@ def get_posts(db: Session = Depends(get_db), user_id: str = Depends(require_user
 
 
 
-@router.post('/products')
+@router.post('/product')
 def create_posts(product: schema.CreateProductSchema, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
     new_product = models.Product(**product.dict())
     db.add(new_product)
@@ -88,5 +88,68 @@ def create_cart(cart_id: str, prdc: schema.AddProductToCartSchema, db: Session =
     return {'status': 'Failed', 'Error': "Cart not Founded!"}
 
         
-
+@router.delete('/products/{products_id}')
+def delete_products(products_id : str, user_id: str = Depends(require_user), db: Session = Depends(get_db)):
+    products_query = db.query(models.Products).filter(models.Products.id == int(products_id))
+    products = products_query.first()
+    if not products :
+        return {'status': 'Failed', 'Error': "Product not Founded!"} 
     
+    cart = db.query(models.Cart).filter(models.Cart.id == products.cart_id).first()
+
+    if int(user_id) != cart.user_id:
+        return {'status': 'Failed', 'Error': "You are not the Owner!"}
+
+    products_query.delete(synchronize_session=False)
+    db.commit()
+    return {'status': 'success', 'result': "Done!"}  
+
+
+@router.delete('/carts/{cart_id}')
+def get_carts(cart_id : str, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+
+    cart_query = db.query(models.Cart).filter(models.Cart.id == int(cart_id))
+    cart = cart_query.first()
+    
+    if not cart :
+        return {'status': 'Failed', 'Error': "Cart not Founded!"} 
+
+    if int(user_id) != cart.user_id:
+        return {'status': 'Failed', 'Error': "You are not the Owner!"}
+    
+    cart_query.delete(synchronize_session=False)
+    db.commit()
+    return {'status': 'success', 'result': "Done!"}  
+
+
+@router.delete('/product/{product_id}')
+def get_carts(product_id : str, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+
+    product_query = db.query(models.Product).filter(models.Product.id == int(product_id))
+    product = product_query.first()
+    
+    if not product :
+        return {'status': 'Failed', 'Error': "Cart not Founded!"} 
+    
+    product_query.delete(synchronize_session=False)
+    db.commit()
+    return {'status': 'success', 'result': "Done!"}  
+
+
+@router.put('/product/{product_id}')
+def get_carts(product_id : str, product: schema.CreateProductSchema, db: Session = Depends(get_db), user_id: str = Depends(require_user)):
+
+    product_query = db.query(models.Product).filter(models.Product.id == int(product_id))
+
+    product_i = product_query.first()
+    
+    if not product_i:
+        return {'status': 'Failed', 'Error': "Product not Founded!"} 
+    
+
+    product_query.update(product.dict(exclude_unset=True), synchronize_session=False)
+
+    db.commit()
+    return {'status': 'success', 'result': product_query}  
+
+

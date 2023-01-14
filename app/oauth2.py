@@ -39,17 +39,11 @@ def require_user(db: Session = Depends(get_db), Authorize: AuthJWT = Depends()):
     try:
         Authorize.jwt_required()
         user_id = Authorize.get_jwt_subject()
-        print(user_id)
         user = db.query(models.User).filter(models.User.id == user_id).first()
-        print(user)
         if not user:
             raise UserNotFound('User no longer exist')
 
-        # if not user.verified:
-        #     raise NotVerified('You are not verified')
-
     except Exception as e:
-        print(e)
         error = e.__class__.__name__
         print(error)
         if error == 'MissingTokenError':
