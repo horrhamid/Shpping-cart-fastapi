@@ -66,3 +66,4 @@ alembic upgrade head
 
 
 ![API'S](https://github.com/horrhamid/Shpping-cart-fastapi/ScreenShot.png)
+  <img alt="Shows an illustrated sun in light mode and a moon with stars in dark mode." src="https://github.com/horrhamid/Shpping-cart-fastapi/ScreenShot.png">
