@@ -40,6 +40,23 @@ class Product(BaseModel):
     description : str
     category : str
 
-    
 class ListProduct(BaseModel):
     posts: List[Product]
+
+
+class CreateProductSchema(BaseModel):
+    id : int
+    title : str
+    price : float
+    description : str
+    category : str
+
+class CreateCartSchema(BaseModel):
+    id : int
+    date : datetime = datetime.now()
+    desc : str
+
+class AddProductToCartSchema(BaseModel):
+    product_id : int
+
+
